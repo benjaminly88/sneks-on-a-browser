@@ -1,0 +1,111 @@
+#head {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  position: absolute;
+  background-image: url('https://i.imgur.com/KT3rjAd.png');
+  background-size: contain;
+  z-index: 2;
+}
+
+#board {
+  height: 700px;
+  width: 700px;
+  border: 1px black solid;
+  position: relative;
+}
+
+#tree {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+}
+
+#stump {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+}
+
+#axe {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+}
+
+
+.score {
+  background-color: greenyellow;
+  text-align: center;
+}
+
+.score-text {
+  display: flex !important;
+  align-items: center !important; 
+  text-align: center;
+  font-family: 'Roboto Mono', monospace !important;
+  border: 1px black solid;
+  font-size: 2.0rem !important;
+}
+
+.segments-text {
+  display: flex !important;
+  align-items: center !important; 
+  text-align: center;
+  vertical-align: middle;
+  font-family: 'Roboto Mono', monospace !important;
+  border: 1px black solid;
+}
+
+.axes-text {
+  display: flex !important;
+  align-items: center !important; 
+  text-align: center;
+  vertical-align: middle;
+  font-family: 'Roboto Mono', monospace !important;
+  border: 1px black solid;
+}
+
+#apple {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+}
+
+#eaten-apple {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+}
+
+#body {
+  height: 50px;
+  width: 50px;
+  border: 2px solid;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1;
+}
+
+@mixin anim($name, $dur, $iterate) {
+  animation-name: $name;
+  animation-duration: $dur;
+  animation-iteration-count:$iterate;
+}
+
+p {
+  font-family: 'VT323', ;
+  font-size:8em;
+  text-align:center;
+  @include anim(example, 1s, infinite);
+}
+
+@keyframes example {
+  0%{color:lime; text-shadow:0 0 20px green}
+  25%{color:green; text-shadow:2px 2px 2px lime; transform: translate(-2px,1px)}
+  40%{color:lime; text-shadow:none; transform: translate(0,0)}
+  50%{color:green; text-shadow:5px 5px 2px blue, -5px -5px 2px red; transform: translate(0px,5px)}
+  70%{color:lime; text-shadow:none; transform: translate(0,0)}
+  80%{color:lime; text-shadow:0 0 20px green; transform: translate(-2px,1px)}
+  100%{color:lime; text-shadow:none;}
+}

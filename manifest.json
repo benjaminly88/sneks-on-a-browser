@@ -1,0 +1,33 @@
+{
+    "manifest_version": 2,
+    "name": "Snake? SNAAAAAAAAKE",
+    "version": "1.0",
+    "content_scripts": [
+        {
+            "matches": ["http://*/*", "https://*/*"],
+            "js": ["./main.js"],
+            "html": ["./snake/index.html"],
+            "css": ["./snake/src/styles.css"]
+        }
+    ],
+    "web_accessible_resources": [
+      "snake/index.html",
+      "snake/src/styles.css",
+      "snake/src/Apple.js",
+      "snake/src/Body.js",
+      "snake/src/Head.js",
+      "snake/src/main.js",
+
+      "snake/assets/apple-basket.png",
+      "snake/assets/apple.png",
+      "snake/assets/axe.png",
+      "snake/assets/eaten-apple",
+      "snake/assets"
+    ],
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    "icons": { "128": "icon.png"}
+}
+
