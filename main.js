@@ -1,64 +1,27 @@
 const contents = document.querySelector('body');
 // const head = document.querySelector('head');
-
 const parentNode = contents.parentNode;
-parentNode.removeChild(contents);
-// parentNode.removeChild(head);
-// const body = document.createElement('body');
+
+console.log(sessionStorage.getItem('hostname'));
+console.log(window.location.hostname);
+
+if (!sessionStorage.getItem('hostname')) {
+  console.log('new session')
+  sessionStorage.setItem('hostname', window.location.hostname);
+  sessionStorage.setItem('passed', false);
+  startgame(parentNode);
+} else {
+  if (sessionStorage.getItem('hostname') !== window.location.hostname || sessionStorage.getItem('passed') === 'false') {
+    sessionStorage.setItem('hostname', window.location.hostname);
+    sessionStorage.setItem('passed', false);
+    console.log('new host')
+    startgame(parentNode);
+  } else {
+    console.log('already passed on this host');
+  }
+}
 
 
-const url = chrome.runtime.getURL('./snake/index.html');
-// contents.innerHTML = fetch(url);
-
-// let doc;
-
-  fetch(url)
-    .then(function(response) {
-      return response.text()
-    })
-    .then(function(html) {
-      var parser = new DOMParser();
-      doc = parser.parseFromString(html, "text/html");
-      // parentNode.appendChild(doc.firstChild.firstChild);
-      parentNode.appendChild(doc.firstChild.lastChild);
-      // parentNode.appendChild(doc.querySelector('head'))
-      // contents.innerHTML = doc;
-    })
-      // function(response) {
-      //   if (response.status !== 200) {
-      //     console.log('Looks like there was a problem. Status Code: ' +
-      //       response.status);
-      //     return;
-      //   }
-
-        // Examine the text in the response
-      //   response.json.then(function(data) {
-          // console.log(response.url);
-        // });
-  //     }
-  //   )
-    .catch(function(err) {
-      console.log('Fetch Error :-S', err);
-    });
-  // contents.innerHTML = "<iframe src=\"snake/index.html\"></iframe>"
-
-
-  // async function getData() {
-  //   const resp = await fetch(chrome.runtime.getURL('./snake/index.html'));
-  //   console.log(resp);
-  //   return resp
-  // }
-
-
-
-
-// contents.innerHTML;
-
-// async function getHTML() {
-//   const resp = await fetch("snake/index.html");
-//   console.log(resp);
-//   return data;
-// }
 
 
 
@@ -311,13 +274,19 @@ class Head {
     setTimeout(this.move.bind(this), this.SPEED);
   }
 
-  gameover() {
-    if (this.points >= 1500) {
+  gameover(gameOverMessage) {
+    if (this.points >= 1250) {
       const gameBody = document.querySelector('body');
+      // const parentNode = gameBody.parentNode;
       parentNode.removeChild(gameBody);
       parentNode.appendChild(contents);
+      window.sessionStorage.setItem('passed', true);
+      alert(`${gameOverMessage}\nYou scored enough points to access this website! :)\nGood job!`);
+      return true;
     } else {
+      alert(`${gameOverMessage}\nSorry, you did not collect enough points to access this website :(\n Try again!`);
       window.location.reload();
+      return true;
     }
   }
 
@@ -350,18 +319,14 @@ class Head {
 
     if (boundaryHit) {
       document.getElementsByClassName('gameover').textContent = `SCORE: ${this.points}`
-      alert(`You hit a boundary. Game Over!\nYou scored ${this.points} points!`);
-      this.gameover();
-      return true;
+      return this.gameover(`You hit a boundary. Game Over!\nYou scored ${this.points} points!`);
     }
 
     for (let i = 1; i < this.body.bodyArray.length; i++) {
       const segment = this.body.bodyArray[i];
       // check if the body pieces are colliding 
       if (segment.posLeft === nextLeft + 'px' && segment.posDown === nextDown + 'px') {
-        alert(`You ate your tail. Game Over!\nYou scored ${this.points} points!`);
-        this.gameover();
-        return true;
+        return this.gameover(`You ate your tail. Game Over!\nYou scored ${this.points} points!`);
       }
     }
 
@@ -371,13 +336,11 @@ class Head {
         if (this.axesHeld > 0) {
           this.spawnTreeStump(tree);
           tree.remove();
-          setTimeout(() => {this.spawnTree()}, Utilities.getRandomDelay(5, 15))
+          // setTimeout(() => {this.spawnTree()}, Utilities.getRandomDelay(5, 15))
           this.axesHeld--;
           this.updateAxes();
         } else {
-          alert(`You ran into a tree! Game Over!\nYou scored ${this.points} points!`);
-          this.gameover();
-          return true;
+          return this.gameover(`You ran into a tree! Game Over!\nYou scored ${this.points} points!`);
         }
       }
     }
@@ -425,7 +388,7 @@ class Head {
   spawnTreeStump(tree) {
     const stump = document.createElement('img');
     stump.setAttribute('id', 'stump');
-    stump.setAttribute('src', 'https://i.imgur.com/yoU7vSH.png');
+    stump.setAttribute('src', 'https://i.imgur.com/TDFwxCk.png');
 
     stump.style.left = tree.style.left;
     stump.style.top = tree.style.top;
@@ -492,6 +455,66 @@ class Utilities {
   }
 }
 
+
+function startgame(parentNode) {
+parentNode.removeChild(contents);
+// parentNode.removeChild(head);
+// const body = document.createElement('body');
+
+
+const url = chrome.runtime.getURL('./snake/index.html');
+// contents.innerHTML = fetch(url);
+
+// let doc;
+
+  fetch(url)
+    .then(function(response) {
+      return response.text()
+    })
+    .then(function(html) {
+      var parser = new DOMParser();
+      doc = parser.parseFromString(html, "text/html");
+      // parentNode.appendChild(doc.firstChild.firstChild);
+      parentNode.appendChild(doc.firstChild.lastChild);
+      // parentNode.appendChild(doc.querySelector('head'))
+      // contents.innerHTML = doc;
+    })
+      // function(response) {
+      //   if (response.status !== 200) {
+      //     console.log('Looks like there was a problem. Status Code: ' +
+      //       response.status);
+      //     return;
+      //   }
+
+        // Examine the text in the response
+      //   response.json.then(function(data) {
+          // console.log(response.url);
+        // });
+  //     }
+  //   )
+    .catch(function(err) {
+      console.log('Fetch Error :-S', err);
+    });
+  // contents.innerHTML = "<iframe src=\"snake/index.html\"></iframe>"
+
+
+  // async function getData() {
+  //   const resp = await fetch(chrome.runtime.getURL('./snake/index.html'));
+  //   console.log(resp);
+  //   return resp
+  // }
+
+
+
+
+// contents.innerHTML;
+
+// async function getHTML() {
+//   const resp = await fetch("snake/index.html");
+//   console.log(resp);
+//   return data;
+// }
+
 setTimeout(() => {
     // console.log(doc);
     const body = document.querySelector('body');
@@ -527,3 +550,4 @@ setTimeout(() => {
       }
     });
   }, 250);
+}
